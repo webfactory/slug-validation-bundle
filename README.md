@@ -48,6 +48,8 @@ Enable the bundle in your kernel:
 you have to load your sluggable objects via a [param converter](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html).
 For Doctrine entities Symfony brings this capability out of the box.
 
+### Request Your Entity via Param Converter ###
+
 Declare your object as controller action parameter:
 
     public function myAction(MyEntity $entity)
@@ -55,6 +57,8 @@ Declare your object as controller action parameter:
     }
     
 When using Doctrine entities, your route parameter ``entity`` must contain the entity ID to make this work.
+
+### Implement Sluggable ###
 
 Provide the hint that the entity has a slug that can be validated by implementing
 ``\Webfactory\SlugValidationBundle\Bridge\SluggableInterface``:
@@ -70,6 +74,8 @@ Provide the hint that the entity has a slug that can be validated by implementin
         }
     }
     
+### Add Slug Parameter to Routes ###
+    
 Declare a route that contains an ``entitySlug`` parameter and points to your action: 
     
     my_entity_route:
@@ -80,6 +86,8 @@ Declare a route that contains an ``entitySlug`` parameter and points to your act
 That's it! Whenever a sluggable entity is used together with a slug parameter in a route this bundle will
 step in and perform a validation. If a slug is invalid, then a redirect to the same route with the 
 corrected slug will be initiated.
+
+### Additional Information ###
 
 Entity and slug parameters are matched by convention: The slug parameter must use the suffix ``Slug``.
 For example the correct parameter name for a ``blogPost`` parameter is ``blogPostSlug``.
