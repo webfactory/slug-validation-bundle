@@ -2,6 +2,9 @@
 
 namespace StaatsoperBerlin\EntitySlugValidationBundle\Tests\EventListener;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Webfactory\SlugValidationBundle\Bridge\SluggableInterface;
 use Webfactory\SlugValidationBundle\EventListener\ValidateSlugListener;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -46,6 +49,41 @@ class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
             ->method('getSlug')
             ->willReturn($slug);
         return $entity;
+    }
+
+    /**
+     * Creates a basic event that is used for testing.
+     *
+     * @return FilterControllerEvent
+     */
+    private function createEvent()
+    {
+        return new FilterControllerEvent(
+            $this->createKernel(),
+            $this->createController(),
+            new Request(),
+            HttpKernelInterface::MASTER_REQUEST
+        );
+    }
+
+    /**
+     * Creates a mocked kernel.
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|HttpKernelInterface
+     */
+    private function createKernel()
+    {
+        return $this->getMock(HttpKernelInterface::class);
+    }
+
+    /**
+     * Creates a mocked controller (which is basically a callable).
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject|callable
+     */
+    private function createController()
+    {
+        return $this->getMock(\stdClass::class, array('__invoke'));
     }
 
     /**
