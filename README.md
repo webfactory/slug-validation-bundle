@@ -1,4 +1,4 @@
-# slug-validation-bundle #
+# Slug Validation Bundle #
 
 [![Build Status](https://travis-ci.org/webfactory/slug-validation-bundle.svg?branch=master)](https://travis-ci.org/webfactory/slug-validation-bundle)
 [![Coverage Status](https://coveralls.io/repos/github/webfactory/slug-validation-bundle/badge.svg?branch=master)](https://coveralls.io/github/webfactory/slug-validation-bundle?branch=master)
