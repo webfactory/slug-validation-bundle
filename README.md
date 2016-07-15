@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/webfactory/slug-validation-bundle.svg?branch=master)](https://travis-ci.org/webfactory/slug-validation-bundle)
 [![Coverage Status](https://coveralls.io/repos/github/webfactory/slug-validation-bundle/badge.svg?branch=master)](https://coveralls.io/github/webfactory/slug-validation-bundle?branch=master)
 
-Do not clutter your controller actions with URL slug validation: This Symfony bundle helps 
+Do not clutter your controller actions with URL slug validation: This Symfony bundle helps
 to validate object slugs in URLs transparently.
 
 - Checks if a slug is valid (if provided at all)
@@ -42,9 +42,50 @@ Enable the bundle in your kernel:
         // ...
     }
 
-## Concept ##
-
 ## Usage ##
+
+*Prerequisite*: In order to be able to use the slug validation provided by this bundle,
+you have to load your sluggable objects via a [param converter](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html).
+For Doctrine entities Symfony brings this capability out of the box.
+
+Declare your object as controller action parameter:
+
+    public function myAction(MyEntity $entity)
+    {
+    }
+    
+When using Doctrine entities, your route parameter ``entity`` must contain the entity ID to make this work.
+
+Provide the hint that the entity has a slug that can be validated by implementing
+``\Webfactory\SlugValidationBundle\Bridge\SluggableInterface``:
+
+    class MyEntity implements SluggableInterface
+    {
+        /**
+         * @return string|null
+         */
+        public function getSlug()
+        {
+            return 'my-generated-slug';
+        }
+    }
+    
+Declare a route that contains an ``entitySlug`` parameter and points to your action: 
+    
+    my_entity_route:
+        path: /entity/{entitySlug}.{entity}
+        defaults:
+            _controller: MyBundle:MyController:my
+
+That's it! Whenever a sluggable entity is used together with a slug parameter in a route this bundle will
+step in and perform a validation. If a slug is invalid, then a redirect to the same route with the 
+corrected slug will be initiated.
+
+Entity and slug parameters are matched by convention: The slug parameter must use the suffix ``Slug``.
+For example the correct parameter name for a ``blogPost`` parameter is ``blogPostSlug``.
+
+If a route contains a sluggable entity but no slug parameter, then nothing will happen, so the usual
+Symfony behavior is not changed.
 
 ## Known Issues ##
 
