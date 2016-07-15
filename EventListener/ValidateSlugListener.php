@@ -3,6 +3,8 @@
 namespace Webfactory\SlugValidationBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Checks if sluggable objects occur in the request attributes (which are mapped to action
@@ -42,6 +44,19 @@ class ValidateSlugListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
+            KernelEvents::CONTROLLER => array('onKernelController', self::PRIORITY_AFTER_PARAM_CONVERTER_LISTENER)
         );
+    }
+
+    /**
+     * Searches for sluggable objects in the route parameters and checks slugs if necessary.
+     *
+     * If an invalid slug is detected, then the user will be redirected to the URLs with the valid slug.
+     *
+     * @param FilterControllerEvent $event
+     */
+    public function onKernelController(FilterControllerEvent $event)
+    {
+
     }
 }
