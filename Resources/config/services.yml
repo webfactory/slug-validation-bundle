@@ -1,1 +1,6 @@
 services:
+    webfactory_slug_validation.listener.slug_validation:
+        class: Webfactory\SlugValidationBundle\EventListener\ValidateSlugListener
+        arguments: ["@router"]
+        tags:
+            - { name: kernel.event_subscriber }
