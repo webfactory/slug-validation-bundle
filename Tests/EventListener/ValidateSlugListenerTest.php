@@ -103,6 +103,23 @@ class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Ensures that the listener does not redirect if there is no slug defined
+     * for the object.
+     */
+    public function testListenerDoesNotRedirectIfObjectHasNoSlug()
+    {
+        $event  = $this->createEvent();
+        $object = $this->createSluggableObject(null);
+        $event->getRequest()->attributes->set('object', $object);
+        $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
+        $originalController = $event->getController();
+
+        $this->listener->onKernelController($event);
+
+        $this->assertSame($originalController, $event->getController());
+    }
+
+    /**
      * Simulates an object that provides the given slug.
      *
      * @param string|null $slug
