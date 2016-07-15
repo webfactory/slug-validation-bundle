@@ -1,7 +1,8 @@
 <?php
 
-namespace StaatsoperBerlin\EntitySlugValidationBundle\Tests\EventListener;
+namespace Webfactory\SlugValidationBundle\Tests\EventListener;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -36,6 +37,71 @@ class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
+    public function testListenerDoesNotRedirectIfRequestContainsNoObjects()
+    {
+        $event = $this->createEvent();
+        $originalController = $event->getController();
+
+        $this->listener->onKernelController($event);
+
+        $this->assertSame($originalController, $event->getController());
+    }
+
+    public function testListenerDoesNotRedirectIfRequestContainsObjectButNoSlugIsRequired()
+    {
+        $event = $this->createEvent();
+        $event->getRequest()->attributes->set('object', $this->createSluggableObject(null));
+        $originalController = $event->getController();
+
+        $this->listener->onKernelController($event);
+
+        $this->assertSame($originalController, $event->getController());
+    }
+
+    public function testListenerDoesNotRedirectIfRequestContainsValidSlugForObject()
+    {
+        $object = $this->createSluggableObject('my-slug');
+        $event   = $this->createEvent();
+        $event->getRequest()->attributes->set('object', $object);
+        $event->getRequest()->attributes->set('objectSlug', $object->getSlug());
+        $originalController = $event->getController();
+
+        $this->listener->onKernelController($event);
+
+        $this->assertSame($originalController, $event->getController());
+    }
+
+    public function testListenerRedirectsIfRequestContainsInvalidSlugForObject()
+    {
+        $event = $this->createEvent();
+        $event->getRequest()->attributes->set('object', $this->createSluggableObject('real-slug'));
+        $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
+
+        $this->listener->onKernelController($event);
+
+        $controller = $event->getController();
+        $this->assertTrue(is_callable($controller), 'Controller must be callable.');
+        $response = call_user_func($controller);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+    }
+
+    public function testListenerAddsCorrectSlugToUrlIfNecessary()
+    {
+        $event  = $this->createEvent();
+        $object = $this->createSluggableObject('real-slug');
+        $event->getRequest()->attributes->set('object', $object);
+        $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
+
+        $this->listener->onKernelController($event);
+
+        $controller = $event->getController();
+        $this->assertTrue(is_callable($controller), 'Controller must be callable.');
+        /* @var $response RedirectResponse */
+        $response = call_user_func($controller);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertContains($object->getSlug(), $response->getTargetUrl());
+    }
+
     /**
      * Simulates an object that provides the given slug.
      *
@@ -44,11 +110,11 @@ class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function createSluggableObject($slug)
     {
-        $entity = $this->getMock(SluggableInterface::class);
-        $entity->expects($this->any())
+        $object = $this->getMock(SluggableInterface::class);
+        $object->expects($this->any())
             ->method('getSlug')
             ->willReturn($slug);
-        return $entity;
+        return $object;
     }
 
     /**
