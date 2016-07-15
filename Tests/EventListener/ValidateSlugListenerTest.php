@@ -53,7 +53,7 @@ class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
      *
      * @return UrlGeneratorInterface
      */
-    protected function createUrlGenerator()
+    private function createUrlGenerator()
     {
         $generator = $this->getMock(UrlGeneratorInterface::class);
         // Create a dummy URL that contains relevant provided data.
