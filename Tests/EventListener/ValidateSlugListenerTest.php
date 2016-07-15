@@ -85,6 +85,21 @@ class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
+    /**
+     * There are problems with the template listener in newer Symfony versions if
+     * the event propagation is not stopped.
+     */
+    public function testListenerStopsEventPropagationIfRedirectIsNecessary()
+    {
+        $event = $this->createEvent();
+        $event->getRequest()->attributes->set('object', $this->createSluggableObject('real-slug'));
+        $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
+
+        $this->listener->onKernelController($event);
+
+        $this->assertTrue($event->isPropagationStopped());
+    }
+
     public function testListenerAddsCorrectSlugToUrlIfNecessary()
     {
         $event  = $this->createEvent();
