@@ -8,3 +8,6 @@ npm-debug.log
 
 ### PHPStorm
 .idea/
+
+### Build files
+build/
