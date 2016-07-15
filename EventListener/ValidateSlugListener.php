@@ -5,6 +5,7 @@ namespace Webfactory\SlugValidationBundle\EventListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Checks if sluggable objects occur in the request attributes (which are mapped to action
@@ -22,6 +23,13 @@ class ValidateSlugListener implements EventSubscriberInterface
      * Priority of this listener. Will run after the param converter.
      */
     const PRIORITY_AFTER_PARAM_CONVERTER_LISTENER = -1;
+
+    /**
+     * Generator that is used to create the redirect URLs.
+     *
+     * @var UrlGeneratorInterface
+     */
+    protected $urlGenerator = null;
 
     /**
      * Returns an array of event names this subscriber wants to listen to.
@@ -46,6 +54,14 @@ class ValidateSlugListener implements EventSubscriberInterface
         return array(
             KernelEvents::CONTROLLER => array('onKernelController', self::PRIORITY_AFTER_PARAM_CONVERTER_LISTENER)
         );
+    }
+
+    /**
+     * @param UrlGeneratorInterface $urlGenerator
+     */
+    public function __construct(UrlGeneratorInterface $urlGenerator)
+    {
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
