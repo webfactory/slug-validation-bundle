@@ -2,6 +2,7 @@
 
 namespace StaatsoperBerlin\EntitySlugValidationBundle\Tests\EventListener;
 
+use Webfactory\SlugValidationBundle\Bridge\SluggableInterface;
 use Webfactory\SlugValidationBundle\EventListener\ValidateSlugListener;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -30,6 +31,21 @@ class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->listener = null;
         parent::tearDown();
+    }
+
+    /**
+     * Simulates an object that provides the given slug.
+     *
+     * @param string|null $slug
+     * @return SluggableInterface
+     */
+    private function createSluggableObject($slug)
+    {
+        $entity = $this->getMock(SluggableInterface::class);
+        $entity->expects($this->any())
+            ->method('getSlug')
+            ->willReturn($slug);
+        return $entity;
     }
 
     /**
