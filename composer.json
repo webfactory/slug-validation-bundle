@@ -1,6 +1,6 @@
 {
     "name": "webfactory/slug-validation-bundle",
-    "description": "",
+    "description": "Transparent validation of URL slugs in Symfony applications.",
     "minimum-stability": "stable",
     "license": "MIT",
     "authors": [
