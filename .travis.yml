@@ -26,3 +26,8 @@ after_script:
 matrix:
     allow_failures:
         - php: 'hhvm'
+
+notifications:
+    hipchat:
+        rooms:
+            secure: "m2vHOh8UlQslm7vpoimrI9alq6+luvGz6Lqmg8JU+kE8333u+rC5ZpsK+8VQ5SDpQb1UMNrycqUt7daQD+VUs0VzIOOdhkkoRON8Tg2JL7I3lFv2DDrFfIO9o+udhYGq+kbveRvv4K080jTSAI2Ue/gHhljVMhMfc93zXsas/vkQdxmLnJImmhiH/5x2RH/So0+ktb+PmeydN60b/DvWUy9rxHlB9NOHlNMCqDF5x8wDAcYh5XLM1CntU7ER8TDHwgppdkyj38ajRQQWg4Ue2uDL0Y1Z8axHbPCoGWcM71lhNvFGYQxN9ArWC+Kwks56w2T1sMj+Y6vkhdkkI7nu4UeLxQCJxGzTV135mrR7i3oMu3iSAAhx783FRuvwVPBEN0gw3hJGxR4bOjq7CrzFOBl6NI9oPTz2IKd4xzupQS1Vo40qA2PlSWwNH9EpFRilQx/UQveSmUhPOUhhv+vpSsV+14bzYvaqQ7HBWuLLZRiZnOszdwm06BxFCHq8FLt6FOkJAd6zEDXnKTpW/wI7TwgjFY4nMuawekAi/ZzmCUkTChSF7Cc6btoUKfSinQkX0jbGu5p7PoeJttEiXvNivY1EAS56MLfJz6cGxza6iGghbcpq2nTlzPm1n9GbhBcagysWFXw89tS65GbsxPK6sLtrnYxLiC4C3Y0XdXg3AZ4="
