@@ -33,7 +33,7 @@ class ValidateSlugListener implements EventSubscriberInterface
      *
      * @var UrlGeneratorInterface
      */
-    protected $urlGenerator = null;
+    private $urlGenerator = null;
 
     /**
      * Returns an array of event names this subscriber wants to listen to.
