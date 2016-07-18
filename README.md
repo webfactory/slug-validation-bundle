@@ -15,7 +15,6 @@ to validate object slugs in URLs transparently.
 - Activate repository at [Coveralls](https://coveralls.io)
 - Publish at [Packagist](https://packagist.org/)
 - Create webhook that pushes repository updates to [Packagist](https://packagist.org/)
-- Configure HipChat webhook (post repository updates to "Github" room)
 
 ## Motivation ##
 
