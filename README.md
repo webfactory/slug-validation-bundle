@@ -93,6 +93,42 @@ For example the correct parameter name for a ``blogPost`` parameter is ``blogPos
 If a route contains a sluggable entity but no slug parameter, then nothing will happen, so the usual
 Symfony behavior is not changed.
 
+#### Slug Generation ####
+
+If you are not sure how to create your slugs, then you might find [cocur/slugify](https://github.com/cocur/slugify)
+useful. A component that generates URL slugs from any string.
+
+#### Simplified Routing ####
+
+Passing slug values during route generation can be a tedious and error-prone task.
+[jms/object-routing](https://github.com/schmittjoh/object-routing) and [benjam1/object-routing-bundle](https://github.com/benja-M-1/BGObjectRoutingBundle)
+can ease that task by defining route construction rules directly with your entity:
+
+    /**
+     * @ObjectRoute(type="my_object_route", name="my_entity_route", params={
+     *     "entity": "id",
+     *     "entitySlug": "slug"
+     * })
+     */
+    class MyEntity implements SluggableInterface
+    {
+        public function getId() 
+        {
+            // ...
+        }
+        
+        public function getSlug() 
+        {
+            // ...
+        }
+        
+        // ...
+    }
+
+When generating the URL, you don't have to deal with passing these parameters anymore (example in Twig):
+
+    {{ object_path('my_object_route', myEntityInstance) }}
+
 ## Known Issues ##
 
 ## Credits, Copyright and License ##
