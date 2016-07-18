@@ -17,7 +17,16 @@ to validate object slugs in URLs transparently.
 - Create webhook that pushes repository updates to [Packagist](https://packagist.org/)
 - Configure HipChat webhook (post repository updates to "Github" room)
 
-## Motivation: Why does this project exist? ##
+## Motivation ##
+
+Handling of URL Slugs is a part of many web applications. Although readable URLs are nice, they usually do not
+contribute to your main functionality. Instead, slug validation and handling of redirects in case of failure generates
+a lot of noise in your controller actions, is often cluttered over many parts of the application and makes it harder
+to see the core problems that are solved.
+
+After facing these problems several times, we decided to create a system that handles slug validation as part
+of the middleware, that keeps your controller actions clean and lets you concentrate on what is really important:
+Your domain problems.
 
 ## Installation ##
 
@@ -128,8 +137,6 @@ can ease that task by defining route construction rules directly with your entit
 When generating the URL, you don't have to deal with passing these parameters anymore (example in Twig):
 
     {{ object_path('my_object_route', myEntityInstance) }}
-
-## Known Issues ##
 
 ## Credits, Copyright and License ##
 
