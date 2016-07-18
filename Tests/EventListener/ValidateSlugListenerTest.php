@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Webfactory\Constraint\IsEventSubscriberConstraint;
 use Webfactory\SlugValidationBundle\Bridge\SluggableInterface;
 use Webfactory\SlugValidationBundle\EventListener\ValidateSlugListener;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -35,6 +36,11 @@ class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->listener = null;
         parent::tearDown();
+    }
+
+    public function testIsEventSubscriber()
+    {
+        $this->assertThat($this->listener, new IsEventSubscriberConstraint());
     }
 
     public function testListenerDoesNotRedirectIfRequestContainsNoObjects()
