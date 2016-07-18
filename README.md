@@ -9,11 +9,6 @@ to validate object slugs in URLs transparently.
 - Checks if a slug is valid (if provided at all)
 - Redirects to the URL with the correct slug on failure (for example after a slug change)
 
-## Initialization Tasks (remove this block once you are done) ##
-
-- Publish at [Packagist](https://packagist.org/)
-- Create webhook that pushes repository updates to [Packagist](https://packagist.org/)
-
 ## Motivation ##
 
 Handling of URL Slugs is a part of many web applications. Although readable URLs are nice, they usually do not
