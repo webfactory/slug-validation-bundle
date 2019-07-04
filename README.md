@@ -102,7 +102,7 @@ useful. A component that generates URL slugs from any string.
 #### Simplified Routing ####
 
 Passing slug values during route generation can be a tedious and error-prone task.
-[jms/object-routing](https://github.com/schmittjoh/object-routing) and [benjam1/object-routing-bundle](https://github.com/benja-M-1/BGObjectRoutingBundle)
+[webfactory/object-routing](https://github.com/webfactory/object-routing) and [webfactory/object-routing-bundle](https://github.com/webfactory/BGObjectRoutingBundle)
 can ease that task by defining route construction rules directly with your entity:
 
     /**
@@ -134,7 +134,7 @@ When generating the URL, you don't have to deal with passing these parameters an
 
 This project was started at webfactory GmbH, Bonn.
 
-- <http://www.webfactory.de>
-- <http://twitter.com/webfactory>
+- <https://www.webfactory.de>
+- <https://twitter.com/webfactory>
 
-Copyright 2016 webfactory GmbH, Bonn. Code released under [the MIT license](LICENSE).
+Copyright 2016-2019 webfactory GmbH, Bonn. Code released under [the MIT license](LICENSE).
