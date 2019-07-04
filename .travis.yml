@@ -6,7 +6,7 @@ cache:
     directories:
         - $HOME/.composer/cache
 php:
-  - '7.2'
+    - '7.2'
 
 env:
     global:
@@ -18,13 +18,12 @@ env:
         - DEPS=no
 
 before_script:
-  - phpenv config-add travis.php.ini
-  - composer self-update
-  - if [[ $SYMFONY_VERSION != no ]]; then composer require --no-update symfony/symfony:${SYMFONY_VERSION}; fi
-  - if [[ $DEPS = low ]]; then composer update --no-interaction --prefer-lowest; fi
-  - composer install --no-interaction
-  - mkdir -p build/logs
+    - composer self-update
+    - if [[ $SYMFONY_VERSION != no ]]; then composer require --no-update symfony/symfony:${SYMFONY_VERSION}; fi
+    - if [[ $DEPS = low ]]; then composer update --no-interaction --prefer-lowest; fi
+    - composer install --no-interaction
+    - mkdir -p build/logs
 
 script:
-  - composer validate --strict
-  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+    - composer validate --strict
+    - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
