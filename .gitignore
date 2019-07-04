@@ -1,13 +1,3 @@
-### Composer
-composer.phar
 vendor/
-
-### Node
-node_modules/
-npm-debug.log
-
-### PHPStorm
-.idea/
-
-### Build files
-build/
+composer.lock
+phpunit.xml

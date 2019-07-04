@@ -5,39 +5,25 @@ sudo: false
 cache:
     directories:
         - $HOME/.composer/cache
-
 php:
-    - '5.5'
-    - '5.6'
-    - '7.0'
-    - 'hhvm'
+    - '7.2'
 
 env:
-    - SYMFONY_VERSION=locked # Use the versions that are given in composer.lock.
-    - SYMFONY_VERSION="2.8.*"
-    - SYMFONY_VERSION="3.0.*"
-    - SYMFONY_VERSION="3.1.*"
+    global:
+        - DEPS=no
+        - SYMFONY_VERSION=no
+    matrix:
+        - SYMFONY_VERSION="2.8.*"
+        - SYMFONY_VERSION="3.4.*"
+        - DEPS=no
 
 before_script:
-    - composer self-update --no-interaction
-    - sh -c "if [ '$SYMFONY_VERSION' = 'locked' ]; then composer install --no-interaction --prefer-source; fi"
-    # Register a specific dependency versions if necessary...
-    - sh -c "if [ '$SYMFONY_VERSION' != 'locked' ]; then composer require --no-update symfony/symfony:${SYMFONY_VERSION}; fi"
-    # ... and update the dependencies accordingly, without restrictions regarding the PHP version.
-    - sh -c "if [ '$SYMFONY_VERSION' != 'locked' ]; then composer config --unset platform.php; composer update --no-interaction --prefer-source; fi"
+    - composer self-update
+    - if [[ $SYMFONY_VERSION != no ]]; then composer require --no-update symfony/symfony:${SYMFONY_VERSION}; fi
+    - if [[ $DEPS = low ]]; then composer update --no-interaction --prefer-lowest; fi
+    - composer install --no-interaction
     - mkdir -p build/logs
 
 script:
+    - composer validate --strict
     - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
-
-after_script:
-    - php vendor/bin/coveralls
-
-matrix:
-    allow_failures:
-        - php: 'hhvm'
-
-notifications:
-    hipchat:
-        rooms:
-            secure: "m2vHOh8UlQslm7vpoimrI9alq6+luvGz6Lqmg8JU+kE8333u+rC5ZpsK+8VQ5SDpQb1UMNrycqUt7daQD+VUs0VzIOOdhkkoRON8Tg2JL7I3lFv2DDrFfIO9o+udhYGq+kbveRvv4K080jTSAI2Ue/gHhljVMhMfc93zXsas/vkQdxmLnJImmhiH/5x2RH/So0+ktb+PmeydN60b/DvWUy9rxHlB9NOHlNMCqDF5x8wDAcYh5XLM1CntU7ER8TDHwgppdkyj38ajRQQWg4Ue2uDL0Y1Z8axHbPCoGWcM71lhNvFGYQxN9ArWC+Kwks56w2T1sMj+Y6vkhdkkI7nu4UeLxQCJxGzTV135mrR7i3oMu3iSAAhx783FRuvwVPBEN0gw3hJGxR4bOjq7CrzFOBl6NI9oPTz2IKd4xzupQS1Vo40qA2PlSWwNH9EpFRilQx/UQveSmUhPOUhhv+vpSsV+14bzYvaqQ7HBWuLLZRiZnOszdwm06BxFCHq8FLt6FOkJAd6zEDXnKTpW/wI7TwgjFY4nMuawekAi/ZzmCUkTChSF7Cc6btoUKfSinQkX0jbGu5p7PoeJttEiXvNivY1EAS56MLfJz6cGxza6iGghbcpq2nTlzPm1n9GbhBcagysWFXw89tS65GbsxPK6sLtrnYxLiC4C3Y0XdXg3AZ4="

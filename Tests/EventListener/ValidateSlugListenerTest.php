@@ -2,6 +2,8 @@
 
 namespace Webfactory\SlugValidationBundle\Tests\EventListener;
 
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
@@ -11,7 +13,7 @@ use Webfactory\SlugValidationBundle\Bridge\SluggableInterface;
 use Webfactory\SlugValidationBundle\EventListener\ValidateSlugListener;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
+class ValidateSlugListenerTest extends TestCase
 {
     /**
      * System under test.
@@ -40,7 +42,7 @@ class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
 
     public function testIsEventSubscriber()
     {
-        $this->assertThat($this->listener, new IsEventSubscriberConstraint());
+        $this->assertInstanceOf(EventSubscriberInterface::class, $this->listener);
     }
 
     public function testListenerDoesNotRedirectIfRequestContainsNoObjects()
@@ -148,7 +150,7 @@ class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function createSluggableObject($slug)
     {
-        $object = $this->getMock(SluggableInterface::class);
+        $object = $this->createMock(SluggableInterface::class);
         $object->expects($this->any())
             ->method('getSlug')
             ->willReturn($slug);
@@ -177,7 +179,7 @@ class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function createKernel()
     {
-        return $this->getMock(HttpKernelInterface::class);
+        return $this->createMock(HttpKernelInterface::class);
     }
 
     /**
@@ -187,7 +189,7 @@ class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function createController()
     {
-        return $this->getMock(\stdClass::class, array('__invoke'));
+        return $this->getMockBuilder(\stdClass::class)->setMethods(['__invoke'])->getMock();
     }
 
     /**
@@ -197,7 +199,7 @@ class ValidateSlugListenerTest extends \PHPUnit_Framework_TestCase
      */
     private function createUrlGenerator()
     {
-        $generator = $this->getMock(UrlGeneratorInterface::class);
+        $generator = $this->createMock(UrlGeneratorInterface::class);
         // Create a dummy URL that contains relevant provided data.
         $generateUrl = function ($route, array $attributes) {
             $url = '/' . $route . '?' . http_build_query($attributes);
