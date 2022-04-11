@@ -12,18 +12,14 @@
 
     <testsuites>
         <testsuite name="slug-validation-bundle Test Suite">
-            <directory>Tests/</directory>
+            <directory>tests/</directory>
         </testsuite>
     </testsuites>
 
     <!-- Filter for code coverage -->
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">.</directory>
-            <exclude>
-                <directory>Tests/</directory>
-                <directory>vendor</directory>
-            </exclude>
+            <directory suffix=".php">src</directory>
         </whitelist>
     </filter>
 
