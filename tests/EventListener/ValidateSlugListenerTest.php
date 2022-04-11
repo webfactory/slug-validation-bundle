@@ -174,10 +174,8 @@ class ValidateSlugListenerTest extends TestCase
 
     /**
      * Creates a basic event that is used for testing.
-     *
-     * @return FilterControllerEvent
      */
-    private function createEvent()
+    private function createEvent(): ControllerEvent
     {
         return new ControllerEvent(
             $this->createKernel(),
