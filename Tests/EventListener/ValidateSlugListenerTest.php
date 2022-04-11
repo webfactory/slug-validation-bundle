@@ -8,10 +8,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Webfactory\Constraint\IsEventSubscriberConstraint;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Webfactory\SlugValidationBundle\Bridge\SluggableInterface;
 use Webfactory\SlugValidationBundle\EventListener\ValidateSlugListener;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ValidateSlugListenerTest extends TestCase
 {
@@ -40,12 +39,18 @@ class ValidateSlugListenerTest extends TestCase
         parent::tearDown();
     }
 
-    public function testIsEventSubscriber()
+    /**
+     * @test
+     */
+    public function isEventSubscriber()
     {
         $this->assertInstanceOf(EventSubscriberInterface::class, $this->listener);
     }
 
-    public function testListenerDoesNotRedirectIfRequestContainsNoObjects()
+    /**
+     * @test
+     */
+    public function listenerDoesNotRedirectIfRequestContainsNoObjects()
     {
         $event = $this->createEvent();
         $originalController = $event->getController();
@@ -55,7 +60,10 @@ class ValidateSlugListenerTest extends TestCase
         $this->assertSame($originalController, $event->getController());
     }
 
-    public function testListenerDoesNotRedirectIfRequestContainsObjectButNoSlugIsRequired()
+    /**
+     * @test
+     */
+    public function listenerDoesNotRedirectIfRequestContainsObjectButNoSlugIsRequired()
     {
         $event = $this->createEvent();
         $event->getRequest()->attributes->set('object', $this->createSluggableObject(null));
@@ -66,10 +74,13 @@ class ValidateSlugListenerTest extends TestCase
         $this->assertSame($originalController, $event->getController());
     }
 
-    public function testListenerDoesNotRedirectIfRequestContainsValidSlugForObject()
+    /**
+     * @test
+     */
+    public function listenerDoesNotRedirectIfRequestContainsValidSlugForObject()
     {
         $object = $this->createSluggableObject('my-slug');
-        $event   = $this->createEvent();
+        $event = $this->createEvent();
         $event->getRequest()->attributes->set('object', $object);
         $event->getRequest()->attributes->set('objectSlug', $object->getSlug());
         $originalController = $event->getController();
@@ -79,7 +90,10 @@ class ValidateSlugListenerTest extends TestCase
         $this->assertSame($originalController, $event->getController());
     }
 
-    public function testListenerRedirectsIfRequestContainsInvalidSlugForObject()
+    /**
+     * @test
+     */
+    public function listenerRedirectsIfRequestContainsInvalidSlugForObject()
     {
         $event = $this->createEvent();
         $event->getRequest()->attributes->set('object', $this->createSluggableObject('real-slug'));
@@ -88,16 +102,18 @@ class ValidateSlugListenerTest extends TestCase
         $this->listener->onKernelController($event);
 
         $controller = $event->getController();
-        $this->assertTrue(is_callable($controller), 'Controller must be callable.');
-        $response = call_user_func($controller);
+        $this->assertTrue(\is_callable($controller), 'Controller must be callable.');
+        $response = \call_user_func($controller);
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
     /**
      * There are problems with the template listener in newer Symfony versions if
      * the event propagation is not stopped.
+     *
+     * @test
      */
-    public function testListenerStopsEventPropagationIfRedirectIsNecessary()
+    public function listenerStopsEventPropagationIfRedirectIsNecessary()
     {
         $event = $this->createEvent();
         $event->getRequest()->attributes->set('object', $this->createSluggableObject('real-slug'));
@@ -108,9 +124,12 @@ class ValidateSlugListenerTest extends TestCase
         $this->assertTrue($event->isPropagationStopped());
     }
 
-    public function testListenerAddsCorrectSlugToUrlIfNecessary()
+    /**
+     * @test
+     */
+    public function listenerAddsCorrectSlugToUrlIfNecessary()
     {
-        $event  = $this->createEvent();
+        $event = $this->createEvent();
         $object = $this->createSluggableObject('real-slug');
         $event->getRequest()->attributes->set('object', $object);
         $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
@@ -118,9 +137,9 @@ class ValidateSlugListenerTest extends TestCase
         $this->listener->onKernelController($event);
 
         $controller = $event->getController();
-        $this->assertTrue(is_callable($controller), 'Controller must be callable.');
+        $this->assertTrue(\is_callable($controller), 'Controller must be callable.');
         /* @var $response RedirectResponse */
-        $response = call_user_func($controller);
+        $response = \call_user_func($controller);
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertContains($object->getSlug(), $response->getTargetUrl());
     }
@@ -128,10 +147,12 @@ class ValidateSlugListenerTest extends TestCase
     /**
      * Ensures that the listener does not redirect if there is no slug defined
      * for the object.
+     *
+     * @test
      */
-    public function testListenerDoesNotRedirectIfObjectHasNoSlug()
+    public function listenerDoesNotRedirectIfObjectHasNoSlug()
     {
-        $event  = $this->createEvent();
+        $event = $this->createEvent();
         $object = $this->createSluggableObject(null);
         $event->getRequest()->attributes->set('object', $object);
         $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
@@ -146,6 +167,7 @@ class ValidateSlugListenerTest extends TestCase
      * Simulates an object that provides the given slug.
      *
      * @param string|null $slug
+     *
      * @return SluggableInterface
      */
     private function createSluggableObject($slug)
@@ -154,6 +176,7 @@ class ValidateSlugListenerTest extends TestCase
         $object->expects($this->any())
             ->method('getSlug')
             ->willReturn($slug);
+
         return $object;
     }
 
@@ -202,10 +225,12 @@ class ValidateSlugListenerTest extends TestCase
         $generator = $this->createMock(UrlGeneratorInterface::class);
         // Create a dummy URL that contains relevant provided data.
         $generateUrl = function ($route, array $attributes) {
-            $url = '/' . $route . '?' . http_build_query($attributes);
+            $url = '/'.$route.'?'.http_build_query($attributes);
+
             return $url;
         };
         $generator->expects($this->any())->method('generate')->willReturnCallback($generateUrl);
+
         return $generator;
     }
 }

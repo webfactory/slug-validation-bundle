@@ -37,14 +37,11 @@ class ValidateSlugListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
-            KernelEvents::CONTROLLER => array('onKernelController', self::PRIORITY_AFTER_PARAM_CONVERTER_LISTENER)
-        );
+        return [
+            KernelEvents::CONTROLLER => ['onKernelController', self::PRIORITY_AFTER_PARAM_CONVERTER_LISTENER],
+        ];
     }
 
-    /**
-     * @param UrlGeneratorInterface $urlGenerator
-     */
     public function __construct(UrlGeneratorInterface $urlGenerator)
     {
         $this->urlGenerator = $urlGenerator;
@@ -54,8 +51,6 @@ class ValidateSlugListener implements EventSubscriberInterface
      * Searches for sluggable objects in the route parameters and checks slugs if necessary.
      *
      * If an invalid slug is detected, then the user will be redirected to the URLs with the valid slug.
-     *
-     * @param FilterControllerEvent $event
      */
     public function onKernelController(FilterControllerEvent $event)
     {
@@ -74,8 +69,8 @@ class ValidateSlugListener implements EventSubscriberInterface
     }
 
     /**
-     * @param Request $request
      * @param string $objectParameterName
+     *
      * @return RedirectResponse
      */
     private function createRedirectFor(Request $request, $objectParameterName)
@@ -85,17 +80,18 @@ class ValidateSlugListener implements EventSubscriberInterface
         $url = $this->urlGenerator->generate(
             $request->get('_route'),
             array_merge(
-                $request->attributes->get('_route_params', array()),
-                array($this->getSlugParameterNameFor($objectParameterName) => $object->getSlug())
+                $request->attributes->get('_route_params', []),
+                [$this->getSlugParameterNameFor($objectParameterName) => $object->getSlug()]
             )
         );
+
         return new RedirectResponse($url, 301);
     }
 
     /**
-     * @param ParameterBag $attributes
      * @param string $name Name of the checked parameter.
-     * @return boolean
+     *
+     * @return bool
      */
     private function hasValidSlug(ParameterBag $attributes, $name)
     {
@@ -104,27 +100,29 @@ class ValidateSlugListener implements EventSubscriberInterface
             // Only sluggable objects are checked.
             return true;
         }
-        if (!$attributes->has($name . 'Slug')) {
+        if (!$attributes->has($name.'Slug')) {
             // Seems as if no slug is used in the route.
             return true;
         }
-        if ($object->getSlug() === null) {
+        if (null === $object->getSlug()) {
             // Object has no slug (yet). Simply accept any slug to avoid
             // getting into an endless redirect loop.
             return true;
         }
         $slug = $attributes->get($this->getSlugParameterNameFor($name));
-        return $object->getSlug() === (string)$slug;
+
+        return $object->getSlug() === (string) $slug;
     }
 
     /**
      * Returns the name of the parameter that could contain the slug for $parameter.
      *
      * @param string $parameter
+     *
      * @return string
      */
     private function getSlugParameterNameFor($parameter)
     {
-        return $parameter . 'Slug';
+        return $parameter.'Slug';
     }
 }
