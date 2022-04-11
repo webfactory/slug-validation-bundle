@@ -2,6 +2,7 @@
 
 namespace Webfactory\SlugValidationBundle\Tests\EventListener;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -24,19 +25,10 @@ class ValidateSlugListenerTest extends TestCase
     /**
      * Initializes the test environment.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->listener = new ValidateSlugListener($this->createUrlGenerator());
-    }
-
-    /**
-     * Cleans up the test environment.
-     */
-    protected function tearDown()
-    {
-        $this->listener = null;
-        parent::tearDown();
     }
 
     /**
@@ -57,7 +49,7 @@ class ValidateSlugListenerTest extends TestCase
 
         $this->listener->onKernelController($event);
 
-        $this->assertSame($originalController, $event->getController());
+        self::assertSame($originalController, $event->getController());
     }
 
     /**
@@ -71,7 +63,7 @@ class ValidateSlugListenerTest extends TestCase
 
         $this->listener->onKernelController($event);
 
-        $this->assertSame($originalController, $event->getController());
+        self::assertSame($originalController, $event->getController());
     }
 
     /**
@@ -87,7 +79,7 @@ class ValidateSlugListenerTest extends TestCase
 
         $this->listener->onKernelController($event);
 
-        $this->assertSame($originalController, $event->getController());
+        self::assertSame($originalController, $event->getController());
     }
 
     /**
@@ -102,9 +94,9 @@ class ValidateSlugListenerTest extends TestCase
         $this->listener->onKernelController($event);
 
         $controller = $event->getController();
-        $this->assertTrue(\is_callable($controller), 'Controller must be callable.');
-        $response = \call_user_func($controller);
-        $this->assertInstanceOf(RedirectResponse::class, $response);
+        self::assertIsCallable($controller, 'Controller must be callable.');
+        $response = call_user_func($controller);
+        self::assertInstanceOf(RedirectResponse::class, $response);
     }
 
     /**
@@ -121,7 +113,7 @@ class ValidateSlugListenerTest extends TestCase
 
         $this->listener->onKernelController($event);
 
-        $this->assertTrue($event->isPropagationStopped());
+        self::assertTrue($event->isPropagationStopped());
     }
 
     /**
@@ -137,11 +129,11 @@ class ValidateSlugListenerTest extends TestCase
         $this->listener->onKernelController($event);
 
         $controller = $event->getController();
-        $this->assertTrue(\is_callable($controller), 'Controller must be callable.');
+        self::assertIsCallable($controller, 'Controller must be callable.');
         /* @var $response RedirectResponse */
         $response = \call_user_func($controller);
-        $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertContains($object->getSlug(), $response->getTargetUrl());
+        self::assertInstanceOf(RedirectResponse::class, $response);
+        self::assertStringContainsString($object->getSlug(), $response->getTargetUrl());
     }
 
     /**
@@ -160,7 +152,7 @@ class ValidateSlugListenerTest extends TestCase
 
         $this->listener->onKernelController($event);
 
-        $this->assertSame($originalController, $event->getController());
+        self::assertSame($originalController, $event->getController());
     }
 
     /**
@@ -198,7 +190,7 @@ class ValidateSlugListenerTest extends TestCase
     /**
      * Creates a mocked kernel.
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|HttpKernelInterface
+     * @return MockObject&HttpKernelInterface
      */
     private function createKernel()
     {
@@ -208,7 +200,7 @@ class ValidateSlugListenerTest extends TestCase
     /**
      * Creates a mocked controller (which is basically a callable).
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|callable
+     * @return MockObject&callable
      */
     private function createController()
     {
