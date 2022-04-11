@@ -95,7 +95,7 @@ class ValidateSlugListenerTest extends TestCase
 
         $controller = $event->getController();
         self::assertIsCallable($controller, 'Controller must be callable.');
-        $response = call_user_func($controller);
+        $response = \call_user_func($controller);
         self::assertInstanceOf(RedirectResponse::class, $response);
     }
 
