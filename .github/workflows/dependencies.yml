@@ -25,10 +25,6 @@ jobs:
                   ini-values: variables_order=EGPCS, date.timezone=Europe/Berlin
                   extensions: intl
             -   uses: actions/checkout@v2
-            -   uses: webfactory/ssh-agent@master
-                with:
-                    ssh-private-key: ${{ secrets.ORG_SSH_PRIVATE_KEY }}
-            -   run: git clone --depth=1 git@github.com:webfactory/actions.git .github/actions
             -   uses: actions/cache@v2
                 with:
                     path: vendor
@@ -39,7 +35,4 @@ jobs:
             -   run: |
                     composer install --no-interaction --no-progress --ansi --no-scripts
                     composer show
-                env:
-                    COMPOSER_AUTH: ${{ secrets.ORG_COMPOSER_AUTH_JSON }}
-            -   uses: ./.github/actions/cleanup-secrets
             -   uses: docker://webfactory/composer-require-checker:3.2.0
