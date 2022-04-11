@@ -88,6 +88,7 @@ class ValidateSlugListenerTest extends TestCase
     public function listenerRedirectsIfRequestContainsInvalidSlugForObject()
     {
         $event = $this->createEvent();
+        $event->getRequest()->attributes->set('_route', 'test');
         $event->getRequest()->attributes->set('object', $this->createSluggableObject('real-slug'));
         $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
 
@@ -123,6 +124,7 @@ class ValidateSlugListenerTest extends TestCase
     {
         $event = $this->createEvent();
         $object = $this->createSluggableObject('real-slug');
+        $event->getRequest()->attributes->set('_route', 'test');
         $event->getRequest()->attributes->set('object', $object);
         $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
 
