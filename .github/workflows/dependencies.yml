@@ -1,0 +1,45 @@
+name: Dependencies
+
+permissions:
+    contents: read
+
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+
+env:
+    PHP_VERSION: 7.4
+
+jobs:
+    composer-require-checker:
+        name: Check missing composer requirements
+        runs-on: ubuntu-20.04
+        if: github.actor != 'dependabot[bot]'
+        steps:
+            -   uses: shivammathur/setup-php@v2
+                with:
+                  php-version: ${{ env.PHP_VERSION }}
+                  tools: composer:v2
+                  ini-values: variables_order=EGPCS, date.timezone=Europe/Berlin
+                  extensions: intl
+            -   uses: actions/checkout@v2
+            -   uses: webfactory/ssh-agent@master
+                with:
+                    ssh-private-key: ${{ secrets.ORG_SSH_PRIVATE_KEY }}
+            -   run: git clone --depth=1 git@github.com:webfactory/actions.git .github/actions
+            -   uses: actions/cache@v2
+                with:
+                    path: vendor
+                    key: composer-${{ runner.os }}-${{ env.PHP_VERSION }}-${{ hashFiles('composer.json', 'composer.lock') }}
+                    restore-keys: |
+                        composer-${{ runner.os }}-${{ env.PHP_VERSION }}-
+                        composer-${{ runner.os }}-
+            -   run: |
+                    composer install --no-interaction --no-progress --ansi --no-scripts
+                    composer show
+                env:
+                    COMPOSER_AUTH: ${{ secrets.ORG_COMPOSER_AUTH_JSON }}
+            -   uses: ./.github/actions/cleanup-secrets
+            -   uses: docker://webfactory/composer-require-checker:3.2.0
