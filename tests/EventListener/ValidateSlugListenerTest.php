@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Webfactory\SlugValidationBundle\Bridge\SluggableInterface;
@@ -179,7 +179,7 @@ class ValidateSlugListenerTest extends TestCase
      */
     private function createEvent()
     {
-        return new FilterControllerEvent(
+        return new ControllerEvent(
             $this->createKernel(),
             $this->createController(),
             new Request(),
