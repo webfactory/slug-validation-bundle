@@ -6,6 +6,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -54,10 +55,8 @@ class ValidateSlugListener implements EventSubscriberInterface
      * Searches for sluggable objects in the route parameters and checks slugs if necessary.
      *
      * If an invalid slug is detected, then the user will be redirected to the URLs with the valid slug.
-     *
-     * @param FilterControllerEvent $event
      */
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelController(ControllerEvent $event)
     {
         $attributes = $event->getRequest()->attributes;
         foreach ($attributes as $name => $value) {

@@ -14,13 +14,14 @@
 
     "require": {
         "php": "7.2.*|7.3.*|7.4.*|8.0.*|8.1.*",
-        "symfony/config": "^3.4|^4.0",
-        "symfony/dependency-injection": "^3.4|^4.0",
-        "symfony/event-dispatcher": "^3.4|^4.0",
-        "symfony/http-foundation": "^3.4|^4.0",
-        "symfony/http-kernel": "^3.4|^4.0",
-        "symfony/routing": "^3.4|^4.0"
+        "symfony/config": "^3.4|^4.0|^5.0",
+        "symfony/dependency-injection": "^3.4|^4.0|^5.0",
+        "symfony/event-dispatcher": "^3.4|^4.0|^5.0",
+        "symfony/http-foundation": "^4.3|^5.0",
+        "symfony/http-kernel": "^3.4|^4.0|^5.0",
+        "symfony/routing": "^3.4|^4.0|^5.0"
     },
+
     "require-dev": {
         "phpunit/phpunit": "^8.0|^9.0"
     },
@@ -36,5 +37,4 @@
             "Webfactory\\SlugValidationBundle\\Tests\\": "tests"
         }
     }
-
 }
