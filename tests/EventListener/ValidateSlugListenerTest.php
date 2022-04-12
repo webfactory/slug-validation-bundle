@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Webfactory\SlugValidationBundle\Bridge\SluggableInterface;
@@ -88,6 +88,7 @@ class ValidateSlugListenerTest extends TestCase
     public function listenerRedirectsIfRequestContainsInvalidSlugForObject()
     {
         $event = $this->createEvent();
+        $event->getRequest()->attributes->set('_route', 'test');
         $event->getRequest()->attributes->set('object', $this->createSluggableObject('real-slug'));
         $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
 
@@ -123,6 +124,7 @@ class ValidateSlugListenerTest extends TestCase
     {
         $event = $this->createEvent();
         $object = $this->createSluggableObject('real-slug');
+        $event->getRequest()->attributes->set('_route', 'test');
         $event->getRequest()->attributes->set('object', $object);
         $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
 
@@ -174,12 +176,10 @@ class ValidateSlugListenerTest extends TestCase
 
     /**
      * Creates a basic event that is used for testing.
-     *
-     * @return FilterControllerEvent
      */
-    private function createEvent()
+    private function createEvent(): ControllerEvent
     {
-        return new FilterControllerEvent(
+        return new ControllerEvent(
             $this->createKernel(),
             $this->createController(),
             new Request(),
