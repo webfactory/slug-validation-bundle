@@ -14,7 +14,7 @@ interface SluggableInterface
      * In that case, no validation will be performed and any
      * (dummy) slug will be accepted.
      *
-     * @return string|null
+     * @return ?string
      */
     public function getSlug();
 }
