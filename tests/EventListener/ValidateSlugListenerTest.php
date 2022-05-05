@@ -34,7 +34,7 @@ class ValidateSlugListenerTest extends TestCase
     /**
      * @test
      */
-    public function isEventSubscriber()
+    public function isEventSubscriber(): void
     {
         $this->assertInstanceOf(EventSubscriberInterface::class, $this->listener);
     }
@@ -42,7 +42,7 @@ class ValidateSlugListenerTest extends TestCase
     /**
      * @test
      */
-    public function listenerDoesNotRedirectIfRequestContainsNoObjects()
+    public function listenerDoesNotRedirectIfRequestContainsNoObjects(): void
     {
         $event = $this->createEvent();
         $originalController = $event->getController();
@@ -55,7 +55,7 @@ class ValidateSlugListenerTest extends TestCase
     /**
      * @test
      */
-    public function listenerDoesNotRedirectIfRequestContainsObjectButNoSlugIsRequired()
+    public function listenerDoesNotRedirectIfRequestContainsObjectButNoSlugIsRequired(): void
     {
         $event = $this->createEvent();
         $event->getRequest()->attributes->set('object', $this->createSluggableObject(null));
@@ -69,7 +69,7 @@ class ValidateSlugListenerTest extends TestCase
     /**
      * @test
      */
-    public function listenerDoesNotRedirectIfRequestContainsValidSlugForObject()
+    public function listenerDoesNotRedirectIfRequestContainsValidSlugForObject(): void
     {
         $object = $this->createSluggableObject('my-slug');
         $event = $this->createEvent();
@@ -85,7 +85,7 @@ class ValidateSlugListenerTest extends TestCase
     /**
      * @test
      */
-    public function listenerRedirectsIfRequestContainsInvalidSlugForObject()
+    public function listenerRedirectsIfRequestContainsInvalidSlugForObject(): void
     {
         $event = $this->createEvent();
         $event->getRequest()->attributes->set('_route', 'test');
@@ -106,7 +106,7 @@ class ValidateSlugListenerTest extends TestCase
      *
      * @test
      */
-    public function listenerStopsEventPropagationIfRedirectIsNecessary()
+    public function listenerStopsEventPropagationIfRedirectIsNecessary(): void
     {
         $event = $this->createEvent();
         $event->getRequest()->attributes->set('object', $this->createSluggableObject('real-slug'));
@@ -120,7 +120,7 @@ class ValidateSlugListenerTest extends TestCase
     /**
      * @test
      */
-    public function listenerAddsCorrectSlugToUrlIfNecessary()
+    public function listenerAddsCorrectSlugToUrlIfNecessary(): void
     {
         $event = $this->createEvent();
         $object = $this->createSluggableObject('real-slug');
@@ -144,7 +144,7 @@ class ValidateSlugListenerTest extends TestCase
      *
      * @test
      */
-    public function listenerDoesNotRedirectIfObjectHasNoSlug()
+    public function listenerDoesNotRedirectIfObjectHasNoSlug(): void
     {
         $event = $this->createEvent();
         $object = $this->createSluggableObject(null);
@@ -159,12 +159,8 @@ class ValidateSlugListenerTest extends TestCase
 
     /**
      * Simulates an object that provides the given slug.
-     *
-     * @param string|null $slug
-     *
-     * @return SluggableInterface
      */
-    private function createSluggableObject($slug)
+    private function createSluggableObject(?string $slug): SluggableInterface
     {
         $object = $this->createMock(SluggableInterface::class);
         $object->expects($this->any())
@@ -192,7 +188,7 @@ class ValidateSlugListenerTest extends TestCase
      *
      * @return MockObject&HttpKernelInterface
      */
-    private function createKernel()
+    private function createKernel(): HttpKernelInterface
     {
         return $this->createMock(HttpKernelInterface::class);
     }
@@ -209,10 +205,8 @@ class ValidateSlugListenerTest extends TestCase
 
     /**
      * Creates a URL generator for testing.
-     *
-     * @return UrlGeneratorInterface
      */
-    private function createUrlGenerator()
+    private function createUrlGenerator(): UrlGeneratorInterface
     {
         $generator = $this->createMock(UrlGeneratorInterface::class);
         // Create a dummy URL that contains relevant provided data.

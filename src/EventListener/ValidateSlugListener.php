@@ -35,7 +35,7 @@ class ValidateSlugListener implements EventSubscriberInterface
      */
     private $urlGenerator = null;
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::CONTROLLER => ['onKernelController', self::PRIORITY_AFTER_PARAM_CONVERTER_LISTENER],
@@ -52,7 +52,7 @@ class ValidateSlugListener implements EventSubscriberInterface
      *
      * If an invalid slug is detected, then the user will be redirected to the URLs with the valid slug.
      */
-    public function onKernelController(ControllerEvent $event)
+    public function onKernelController(ControllerEvent $event): void
     {
         $attributes = $event->getRequest()->attributes;
         foreach ($attributes as $name => $value) {
@@ -68,12 +68,7 @@ class ValidateSlugListener implements EventSubscriberInterface
         }
     }
 
-    /**
-     * @param string $objectParameterName
-     *
-     * @return RedirectResponse
-     */
-    private function createRedirectFor(Request $request, $objectParameterName)
+    private function createRedirectFor(Request $request, string $objectParameterName): RedirectResponse
     {
         /* @var $object SluggableInterface */
         $object = $request->attributes->get($objectParameterName);
@@ -90,10 +85,8 @@ class ValidateSlugListener implements EventSubscriberInterface
 
     /**
      * @param string $name Name of the checked parameter.
-     *
-     * @return bool
      */
-    private function hasValidSlug(ParameterBag $attributes, $name)
+    private function hasValidSlug(ParameterBag $attributes, string $name): bool
     {
         $object = $attributes->get($name);
         if (!($object instanceof SluggableInterface)) {
@@ -116,12 +109,8 @@ class ValidateSlugListener implements EventSubscriberInterface
 
     /**
      * Returns the name of the parameter that could contain the slug for $parameter.
-     *
-     * @param string $parameter
-     *
-     * @return string
      */
-    private function getSlugParameterNameFor($parameter)
+    private function getSlugParameterNameFor(string $parameter): string
     {
         return $parameter.'Slug';
     }
