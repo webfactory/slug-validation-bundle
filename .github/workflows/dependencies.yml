@@ -24,7 +24,7 @@ jobs:
                   tools: composer:v2
                   ini-values: variables_order=EGPCS, date.timezone=Europe/Berlin
                   extensions: intl
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
             -   uses: actions/cache@v2
                 with:
                     path: vendor
