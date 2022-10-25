@@ -28,7 +28,7 @@ jobs:
                 with:
                   php-version: ${{ matrix.php-version }}
                   tools: composer:v2
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
             -   run: VERSION=${{ matrix.symfony-locked-version }} .github/workflows/lock-symfony-version.sh
                 if: matrix.symfony-locked-version != 'none'
             -   uses: actions/cache@v2
