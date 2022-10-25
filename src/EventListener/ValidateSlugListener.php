@@ -26,7 +26,7 @@ class ValidateSlugListener implements EventSubscriberInterface
     /**
      * Priority of this listener. Will run after the param converter.
      */
-    const PRIORITY_AFTER_PARAM_CONVERTER_LISTENER = -1;
+    public const PRIORITY_AFTER_PARAM_CONVERTER_LISTENER = -1;
 
     /**
      * Generator that is used to create the redirect URLs.
