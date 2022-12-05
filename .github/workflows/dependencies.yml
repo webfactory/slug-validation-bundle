@@ -25,7 +25,7 @@ jobs:
                   ini-values: variables_order=EGPCS, date.timezone=Europe/Berlin
                   extensions: intl
             -   uses: actions/checkout@v3
-            -   uses: actions/cache@v2
+            -   uses: actions/cache@v3
                 with:
                     path: vendor
                     key: composer-${{ runner.os }}-${{ env.PHP_VERSION }}-${{ hashFiles('composer.json', 'composer.lock') }}
