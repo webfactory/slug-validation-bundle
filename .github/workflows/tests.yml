@@ -27,6 +27,7 @@ jobs:
             -   uses: shivammathur/setup-php@v2
                 with:
                   php-version: ${{ matrix.php-version }}
+                  coverage: none
                   tools: composer:v2
             -   uses: actions/checkout@v3
             -   run: VERSION=${{ matrix.symfony-locked-version }} .github/workflows/lock-symfony-version.sh
