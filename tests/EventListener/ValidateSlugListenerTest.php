@@ -179,7 +179,7 @@ class ValidateSlugListenerTest extends TestCase
             $this->createKernel(),
             $this->createController(),
             new Request(),
-            HttpKernelInterface::MASTER_REQUEST
+            HttpKernelInterface::MAIN_REQUEST
         );
     }
 
