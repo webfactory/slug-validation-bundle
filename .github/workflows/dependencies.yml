@@ -15,7 +15,7 @@ env:
 jobs:
     composer-require-checker:
         name: Check missing composer requirements
-        runs-on: ubuntu-20.04
+        runs-un: ubuntu-22.04
         if: github.actor != 'dependabot[bot]'
         steps:
             -   uses: shivammathur/setup-php@v2
@@ -25,8 +25,8 @@ jobs:
                   tools: composer:v2
                   ini-values: variables_order=EGPCS, date.timezone=Europe/Berlin
                   extensions: intl
-            -   uses: actions/checkout@v3
-            -   uses: actions/cache@v3
+            -   uses: actions/checkout@v4
+            -   uses: actions/cache@v4
                 with:
                     path: vendor
                     key: composer-${{ runner.os }}-${{ env.PHP_VERSION }}-${{ hashFiles('composer.json', 'composer.lock') }}
