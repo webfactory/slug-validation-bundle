@@ -15,7 +15,7 @@ env:
 jobs:
     composer-require-checker:
         name: Check missing composer requirements
-        runs-un: ubuntu-22.04
+        runs-on: ubuntu-22.04
         if: github.actor != 'dependabot[bot]'
         steps:
             -   uses: shivammathur/setup-php@v2
