@@ -20,7 +20,7 @@ class ValidateSlugListenerTest extends TestCase
      *
      * @var ValidateSlugListener
      */
-    protected $listener = null;
+    protected $listener;
 
     /**
      * Initializes the test environment.
