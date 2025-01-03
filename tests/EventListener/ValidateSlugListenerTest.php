@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Webfactory\SlugValidationBundle\Bridge\SluggableInterface;
@@ -42,7 +42,7 @@ final class ValidateSlugListenerTest extends TestCase
         $event = $this->createEvent();
         $originalController = $event->getController();
 
-        $this->listener->onKernelController($event);
+        $this->listener->pepareRedirectIfAnInvalidSlugIsGiven($event);
 
         self::assertSame($originalController, $event->getController());
     }
@@ -56,7 +56,7 @@ final class ValidateSlugListenerTest extends TestCase
         $event->getRequest()->attributes->set('object', $this->createSluggableObject(null));
         $originalController = $event->getController();
 
-        $this->listener->onKernelController($event);
+        $this->listener->pepareRedirectIfAnInvalidSlugIsGiven($event);
 
         self::assertSame($originalController, $event->getController());
     }
@@ -72,7 +72,7 @@ final class ValidateSlugListenerTest extends TestCase
         $event->getRequest()->attributes->set('objectSlug', $object->getSlug());
         $originalController = $event->getController();
 
-        $this->listener->onKernelController($event);
+        $this->listener->pepareRedirectIfAnInvalidSlugIsGiven($event);
 
         self::assertSame($originalController, $event->getController());
     }
@@ -84,10 +84,10 @@ final class ValidateSlugListenerTest extends TestCase
     {
         $event = $this->createEvent();
         $event->getRequest()->attributes->set('_route', 'test');
-        $event->getRequest()->attributes->set('object', $this->createSluggableObject('real-slug'));
+        $event->setArguments([$this->createSluggableObject('real-slug')]);
         $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
 
-        $this->listener->onKernelController($event);
+        $this->listener->pepareRedirectIfAnInvalidSlugIsGiven($event);
 
         $controller = $event->getController();
         self::assertIsCallable($controller, 'Controller must be callable.');
@@ -104,10 +104,10 @@ final class ValidateSlugListenerTest extends TestCase
     public function listenerStopsEventPropagationIfRedirectIsNecessary(): void
     {
         $event = $this->createEvent();
-        $event->getRequest()->attributes->set('object', $this->createSluggableObject('real-slug'));
+        $event->setArguments([$this->createSluggableObject('real-slug')]);
         $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
 
-        $this->listener->onKernelController($event);
+        $this->listener->pepareRedirectIfAnInvalidSlugIsGiven($event);
 
         self::assertTrue($event->isPropagationStopped());
     }
@@ -120,10 +120,10 @@ final class ValidateSlugListenerTest extends TestCase
         $event = $this->createEvent();
         $object = $this->createSluggableObject('real-slug');
         $event->getRequest()->attributes->set('_route', 'test');
-        $event->getRequest()->attributes->set('object', $object);
+        $event->setArguments([$this->createSluggableObject('real-slug')]);
         $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
 
-        $this->listener->onKernelController($event);
+        $this->listener->pepareRedirectIfAnInvalidSlugIsGiven($event);
 
         $controller = $event->getController();
         self::assertIsCallable($controller, 'Controller must be callable.');
@@ -147,7 +147,7 @@ final class ValidateSlugListenerTest extends TestCase
         $event->getRequest()->attributes->set('objectSlug', 'an-invalid-slug');
         $originalController = $event->getController();
 
-        $this->listener->onKernelController($event);
+        $this->listener->pepareRedirectIfAnInvalidSlugIsGiven($event);
 
         self::assertSame($originalController, $event->getController());
     }
@@ -168,36 +168,15 @@ final class ValidateSlugListenerTest extends TestCase
     /**
      * Creates a basic event that is used for testing.
      */
-    private function createEvent(): ControllerEvent
+    private function createEvent(): ControllerArgumentsEvent
     {
-        return new ControllerEvent(
-            $this->createKernel(),
-            $this->createController(),
+        return new ControllerArgumentsEvent(
+            $this->createMock(HttpKernelInterface::class),
+            [new TestController(), 'testAction'],
+            [],
             new Request(),
             HttpKernelInterface::MAIN_REQUEST
         );
-    }
-
-    /**
-     * Creates a mocked kernel.
-     *
-     * @return MockObject&HttpKernelInterface
-     */
-    private function createKernel(): HttpKernelInterface
-    {
-        return $this->createMock(HttpKernelInterface::class);
-    }
-
-    /**
-     * Creates a mocked controller (which is basically a callable).
-     *
-     * @return MockObject&callable
-     */
-    private function createController(): MockObject
-    {
-        return $this->getMockBuilder(\stdClass::class)
-            ->addMethods(['__invoke'])
-            ->getMock();
     }
 
     /**

@@ -5,33 +5,28 @@ namespace Webfactory\SlugValidationBundle\EventListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Webfactory\SlugValidationBundle\Bridge\SluggableInterface;
 
 /**
- * Checks if sluggable objects occur in the request attributes (which are mapped to action
- * parameters) and validates corresponding slugs, if available.
+ * This listener is called after the arguments for a controller action are resolved.
  *
- * This listener must be registered *after* the ParamConverterListener, otherwise
- * the validation cannot work.
- *
- * Slugs must be available as route parameter. The slug for a parameter "object" is
- * expected as "objectSlug" parameter.
+ * It checks these arguments for SluggableInterface implementations and if one is found,
+ * it checks it's slug against the slug in the route parameters. If the route parameter
+ * slug is invalid, a RedirectResponse to the URL with the correct slug is created.
+ * 
+ * The name of the slug parameter in the route paramters is expected to be the argument
+ * name + "Slug", e.g. named "objectSlug" for an argument named "object".
  */
 final class ValidateSlugListener implements EventSubscriberInterface
 {
-    /**
-     * Priority of this listener. Will run after the param converter.
-     */
-    public const PRIORITY_AFTER_PARAM_CONVERTER_LISTENER = -1;
-
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::CONTROLLER => ['onKernelController', self::PRIORITY_AFTER_PARAM_CONVERTER_LISTENER],
+            KernelEvents::CONTROLLER_ARGUMENTS => 'pepareRedirectIfAnInvalidSlugIsGiven',
         ];
     }
 
@@ -40,46 +35,40 @@ final class ValidateSlugListener implements EventSubscriberInterface
     ) {
     }
 
-    /**
-     * Searches for sluggable objects in the route parameters and checks slugs if necessary.
-     *
-     * If an invalid slug is detected, then the user will be redirected to the URLs with the valid slug.
-     */
-    public function onKernelController(ControllerEvent $event): void
+    public function pepareRedirectIfAnInvalidSlugIsGiven(ControllerArgumentsEvent $event): void
     {
         $attributes = $event->getRequest()->attributes;
-        foreach ($attributes as $name => $value) {
-            if (!$this->hasInvalidSlug($attributes, $name)) {
-                continue;
+        foreach ($event->getNamedArguments() as $parameterName => $parameterValue) {
+            if ($this->hasInvalidSlug($attributes, $parameterName, $parameterValue)) {
+                $this->prepareRedirect($event, $parameterName, $parameterValue);
+                break;
             }
-
-            // Redirect to a URL with valid slug.
-            $event->setController(function () use ($event, $name) {
-                return $this->createRedirectFor($event->getRequest(), $name);
-            });
-            $event->stopPropagation();
-            break;
         }
     }
 
-    private function createRedirectFor(Request $request, string $objectParameterName): RedirectResponse
-    {
-        /* @var $object SluggableInterface */
-        $object = $request->attributes->get($objectParameterName);
-        $url = $this->urlGenerator->generate(
-            $request->get('_route'),
-            array_merge(
-                $request->attributes->get('_route_params', []),
-                [$this->getSlugParameterNameFor($objectParameterName) => $object->getSlug()]
-            )
-        );
+    private function prepareRedirect(
+        ControllerArgumentsEvent $event,
+        string $parameterName,
+        SluggableInterface $sluggable
+    ): void {
+        $event->setController(function () use ($event, $parameterName, $sluggable) {
+            return new RedirectResponse(
+                $this->urlGenerator->generate(
+                    $event->getRequest()->get('_route'),
+                    array_merge(
+                        $event->getRequest()->attributes->get('_route_params', []),
+                        [$this->getSlugParameterNameFor($parameterName) => $sluggable->getSlug()]
+                    )
+                ),
+                Response::HTTP_MOVED_PERMANENTLY,
+            );
+        });
 
-        return new RedirectResponse($url, 301);
+        $event->stopPropagation();
     }
 
-    private function hasInvalidSlug(ParameterBag $attributes, string $parameterName): bool
+    private function hasInvalidSlug(ParameterBag $attributes, string $parameterName, mixed $object): bool
     {
-        $object = $attributes->get($parameterName);
         if (!($object instanceof SluggableInterface)) {
             // Only sluggable objects are checked.
             return false;
