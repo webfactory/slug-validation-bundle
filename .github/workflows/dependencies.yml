@@ -10,7 +10,7 @@ on:
     pull_request:
 
 env:
-    PHP_VERSION: 8.0
+    PHP_VERSION: 8.3
 
 jobs:
     composer-require-checker:
