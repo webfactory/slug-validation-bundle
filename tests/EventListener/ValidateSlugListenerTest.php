@@ -13,12 +13,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Webfactory\SlugValidationBundle\Bridge\SluggableInterface;
 use Webfactory\SlugValidationBundle\EventListener\ValidateSlugListener;
 
-class ValidateSlugListenerTest extends TestCase
+final class ValidateSlugListenerTest extends TestCase
 {
     /**
      * System under test.
      */
-    protected ValidateSlugListener $listener;
+    private ValidateSlugListener $listener;
 
     protected function setUp(): void
     {

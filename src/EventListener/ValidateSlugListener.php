@@ -21,7 +21,7 @@ use Webfactory\SlugValidationBundle\Bridge\SluggableInterface;
  * Slugs must be available as route parameter. The slug for a parameter "object" is
  * expected as "objectSlug" parameter.
  */
-class ValidateSlugListener implements EventSubscriberInterface
+final class ValidateSlugListener implements EventSubscriberInterface
 {
     /**
      * Priority of this listener. Will run after the param converter.
