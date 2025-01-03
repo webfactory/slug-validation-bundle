@@ -28,13 +28,6 @@ class ValidateSlugListener implements EventSubscriberInterface
      */
     public const PRIORITY_AFTER_PARAM_CONVERTER_LISTENER = -1;
 
-    /**
-     * Generator that is used to create the redirect URLs.
-     *
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
     public static function getSubscribedEvents(): array
     {
         return [
@@ -42,9 +35,9 @@ class ValidateSlugListener implements EventSubscriberInterface
         ];
     }
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
-    {
-        $this->urlGenerator = $urlGenerator;
+    public function __construct(
+        private UrlGeneratorInterface $urlGenerator
+    ) {
     }
 
     /**

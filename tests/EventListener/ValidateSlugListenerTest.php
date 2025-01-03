@@ -17,14 +17,9 @@ class ValidateSlugListenerTest extends TestCase
 {
     /**
      * System under test.
-     *
-     * @var ValidateSlugListener
      */
-    protected $listener;
+    protected ValidateSlugListener $listener;
 
-    /**
-     * Initializes the test environment.
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -198,9 +193,11 @@ class ValidateSlugListenerTest extends TestCase
      *
      * @return MockObject&callable
      */
-    private function createController()
+    private function createController(): MockObject
     {
-        return $this->getMockBuilder(\stdClass::class)->setMethods(['__invoke'])->getMock();
+        return $this->getMockBuilder(\stdClass::class)
+            ->addMethods(['__invoke'])
+            ->getMock();
     }
 
     /**

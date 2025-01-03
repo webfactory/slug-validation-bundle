@@ -26,25 +26,23 @@ Install the bundle via [Composer](https://getcomposer.org):
 
     composer require webfactory/slug-validation-bundle
 
-Enable the bundle in your kernel:
+Enable the bundle:
 
     <?php
-    // app/AppKernel.php
+    // src/bundles.php
 
-    public function registerBundles()
-    {
-        $bundles = array(
-            // ...
-            new \Webfactory\SlugValidationBundle\WebfactorySlugValidationBundle(),
-            // ...
-        );
+    return [
         // ...
-    }
+        Webfactory\SlugValidationBundle\WebfactorySlugValidationBundle::class => ['all' => true],
+        // ...
+    ];
 
 ## Usage ##
 
 *Prerequisite*: In order to be able to use the slug validation provided by this bundle,
-you have to load your sluggable objects via a [param converter](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html).
+you have to load your sluggable objects outside of the controller action, e.g. via a
+[param converter](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html),
+so that the object is provided as a parameter to the action method.  
 For Doctrine entities Symfony brings this capability out of the box.
 
 ### Request Your Entity via Param Converter ###
@@ -64,10 +62,7 @@ Provide the hint that the entity has a slug that can be validated by implementin
 
     class MyEntity implements SluggableInterface
     {
-        /**
-         * @return string|null
-         */
-        public function getSlug()
+        public function getSlug(): ?string
         {
             return 'my-generated-slug';
         }
@@ -137,4 +132,4 @@ This project was started at webfactory GmbH, Bonn.
 - <https://www.webfactory.de>
 - <https://twitter.com/webfactory>
 
-Copyright 2016-2019 webfactory GmbH, Bonn. Code released under [the MIT license](LICENSE).
+Copyright 2016-2025 webfactory GmbH, Bonn. Code released under [the MIT license](LICENSE).
