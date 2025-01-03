@@ -13,8 +13,6 @@ interface SluggableInterface
      * Return null if the object does not have a slug (yet).
      * In that case, no validation will be performed and any
      * (dummy) slug will be accepted.
-     *
-     * @return ?string
      */
-    public function getSlug();
+    public function getSlug(): ?string;
 }

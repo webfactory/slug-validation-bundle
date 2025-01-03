@@ -193,7 +193,7 @@ class ValidateSlugListenerTest extends TestCase
      *
      * @return MockObject&callable
      */
-    private function createController()
+    private function createController(): MockObject
     {
         return $this->getMockBuilder(\stdClass::class)
             ->onlyMethods(['__invoke'])
