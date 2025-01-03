@@ -62,10 +62,7 @@ Provide the hint that the entity has a slug that can be validated by implementin
 
     class MyEntity implements SluggableInterface
     {
-        /**
-         * @return string|null
-         */
-        public function getSlug()
+        public function getSlug(): ?string
         {
             return 'my-generated-slug';
         }
