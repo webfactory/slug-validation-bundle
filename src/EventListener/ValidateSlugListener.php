@@ -53,11 +53,11 @@ final class ValidateSlugListener implements EventSubscriberInterface
                 continue;
             }
 
-            $event->stopPropagation();
-            // Invalid slug passed. Redirect to a URL with valid slug.
+            // Redirect to a URL with valid slug.
             $event->setController(function () use ($event, $name) {
                 return $this->createRedirectFor($event->getRequest(), $name);
             });
+            $event->stopPropagation();
             break;
         }
     }
