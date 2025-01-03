@@ -40,7 +40,9 @@ Enable the bundle:
 ## Usage ##
 
 *Prerequisite*: In order to be able to use the slug validation provided by this bundle,
-you have to load your sluggable objects via a [param converter](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html).
+you have to load your sluggable objects outside of the controller action, e.g. via a
+[param converter](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html),
+so that the object is provided as a parameter to the action method.  
 For Doctrine entities Symfony brings this capability out of the box.
 
 ### Request Your Entity via Param Converter ###
