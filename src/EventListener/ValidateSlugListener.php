@@ -49,9 +49,10 @@ final class ValidateSlugListener implements EventSubscriberInterface
     {
         $attributes = $event->getRequest()->attributes;
         foreach ($attributes as $name => $value) {
-            if ($this->hasValidSlug($attributes, $name)) {
+            if (!$this->hasInvalidSlug($attributes, $name)) {
                 continue;
             }
+
             $event->stopPropagation();
             // Invalid slug passed. Redirect to a URL with valid slug.
             $event->setController(function () use ($event, $name) {
@@ -76,27 +77,27 @@ final class ValidateSlugListener implements EventSubscriberInterface
         return new RedirectResponse($url, 301);
     }
 
-    private function hasValidSlug(ParameterBag $attributes, string $parameterName): bool
+    private function hasInvalidSlug(ParameterBag $attributes, string $parameterName): bool
     {
         $object = $attributes->get($parameterName);
         if (!($object instanceof SluggableInterface)) {
             // Only sluggable objects are checked.
-            return true;
+            return false;
         }
 
         $slugParameterName = $this->getSlugParameterNameFor($parameterName);
         if (!$attributes->has($slugParameterName)) {
             // Seems as if no slug is used in the route.
-            return true;
+            return false;
         }
+
         if (null === $object->getSlug()) {
             // Object has no slug (yet). Simply accept any slug to avoid
             // getting into an endless redirect loop.
-            return true;
+            return false;
         }
-        $slug = $attributes->get($slugParameterName);
 
-        return $object->getSlug() === (string) $slug;
+        return $object->getSlug() !== (string) $attributes->get($slugParameterName);
     }
 
     /**
