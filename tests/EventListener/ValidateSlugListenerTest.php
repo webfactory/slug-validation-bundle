@@ -135,8 +135,8 @@ final class ValidateSlugListenerTest extends TestCase
         array $controllerArguments = [],
         ?string $slugParameterValue = null
     ): ControllerArgumentsEvent {
-        $requestAttributes = ['_route' => 'test',];
-        if ($slugParameterValue !== null) {
+        $requestAttributes = ['_route' => 'test'];
+        if (null !== $slugParameterValue) {
             $requestAttributes['objectSlug'] = $slugParameterValue;
         }
 

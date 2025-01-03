@@ -17,7 +17,7 @@ use Webfactory\SlugValidationBundle\Bridge\SluggableInterface;
  * It checks these arguments for SluggableInterface implementations and if one is found,
  * it checks it's slug against the slug in the route parameters. If the route parameter
  * slug is invalid, a RedirectResponse to the URL with the correct slug is created.
- * 
+ *
  * The name of the slug parameter in the route paramters is expected to be the argument
  * name + "Slug", e.g. named "objectSlug" for an argument named "object".
  */
