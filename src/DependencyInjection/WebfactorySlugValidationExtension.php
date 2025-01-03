@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-class WebfactorySlugValidationExtension extends Extension
+final class WebfactorySlugValidationExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
