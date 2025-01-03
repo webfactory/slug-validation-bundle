@@ -83,7 +83,9 @@ final class ValidateSlugListener implements EventSubscriberInterface
             // Only sluggable objects are checked.
             return true;
         }
-        if (!$attributes->has($parameterName.'Slug')) {
+
+        $slugParameterName = $this->getSlugParameterNameFor($parameterName);
+        if (!$attributes->has($slugParameterName)) {
             // Seems as if no slug is used in the route.
             return true;
         }
@@ -92,7 +94,7 @@ final class ValidateSlugListener implements EventSubscriberInterface
             // getting into an endless redirect loop.
             return true;
         }
-        $slug = $attributes->get($this->getSlugParameterNameFor($parameterName));
+        $slug = $attributes->get($slugParameterName);
 
         return $object->getSlug() === (string) $slug;
     }
