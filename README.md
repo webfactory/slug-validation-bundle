@@ -132,4 +132,4 @@ This project was started at webfactory GmbH, Bonn.
 - <https://www.webfactory.de>
 - <https://twitter.com/webfactory>
 
-Copyright 2016-2019 webfactory GmbH, Bonn. Code released under [the MIT license](LICENSE).
+Copyright 2016-2025 webfactory GmbH, Bonn. Code released under [the MIT license](LICENSE).
