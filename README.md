@@ -26,20 +26,16 @@ Install the bundle via [Composer](https://getcomposer.org):
 
     composer require webfactory/slug-validation-bundle
 
-Enable the bundle in your kernel:
+Enable the bundle:
 
     <?php
-    // app/AppKernel.php
+    // src/bundles.php
 
-    public function registerBundles()
-    {
-        $bundles = array(
-            // ...
-            new \Webfactory\SlugValidationBundle\WebfactorySlugValidationBundle(),
-            // ...
-        );
+    return [
         // ...
-    }
+        Webfactory\SlugValidationBundle\WebfactorySlugValidationBundle::class => ['all' => true],
+        // ...
+    ];
 
 ## Usage ##
 
