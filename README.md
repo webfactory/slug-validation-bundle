@@ -1,7 +1,7 @@
-# Slug Validation Bundle #
+# Slug Validation Bundle
 
-[![Build Status](https://travis-ci.org/webfactory/slug-validation-bundle.svg?branch=master)](https://travis-ci.org/webfactory/slug-validation-bundle)
-[![Coverage Status](https://coveralls.io/repos/github/webfactory/slug-validation-bundle/badge.svg?branch=master)](https://coveralls.io/github/webfactory/slug-validation-bundle?branch=master)
+![Tests](https://github.com/webfactory/slug-validation-bundle/workflows/Tests/badge.svg)
+![Dependencies](https://github.com/webfactory/slug-validation-bundle/workflows/Dependencies/badge.svg)
 
 Do not clutter your controller actions with URL slug validation: This Symfony bundle helps
 to validate object slugs in URLs transparently.
@@ -9,7 +9,7 @@ to validate object slugs in URLs transparently.
 - Checks if a slug is valid (if provided at all)
 - Redirects to the URL with the correct slug on failure (for example after a slug change)
 
-## Motivation ##
+## Motivation
 
 Handling of URL Slugs is a part of many web applications. Although readable URLs are nice, they usually do not
 contribute to your main functionality. Instead, slug validation and handling of redirects in case of failure generates
@@ -20,7 +20,7 @@ After facing these problems several times, we decided to create a system that ha
 of the middleware, that keeps your controller actions clean and lets you concentrate on what is really important:
 Your domain problems.
 
-## Installation ##
+## Installation
 
 Install the bundle via [Composer](https://getcomposer.org):
 
@@ -37,25 +37,21 @@ Enable the bundle:
         // ...
     ];
 
-## Usage ##
+## Usage
 
-*Prerequisite*: In order to be able to use the slug validation provided by this bundle,
-you have to load your sluggable objects outside of the controller action, e.g. via a
-[param converter](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html),
-so that the object is provided as a parameter to the action method.  
-For Doctrine entities Symfony brings this capability out of the box.
+### Prerequisite: Sluggable object as controller action parameter
 
-### Request Your Entity via Param Converter ###
-
-Declare your object as controller action parameter:
+Declare your sluggable object as controller action parameter:
 
     public function myAction(MyEntity $entity)
     {
     }
-    
-When using Doctrine entities, your route parameter ``entity`` must contain the entity ID to make this work.
 
-### Implement Sluggable ###
+And configure it to be resolved before the controller action is called, e.g. via
+[`#[MapEntity]`](https://symfony.com/doc/current/doctrine.html#mapentity-options) or
+[`@ParamConverter`](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html) (deprecated).
+
+### Implement Sluggable
 
 Provide the hint that the entity has a slug that can be validated by implementing
 ``\Webfactory\SlugValidationBundle\Bridge\SluggableInterface``:
@@ -68,7 +64,7 @@ Provide the hint that the entity has a slug that can be validated by implementin
         }
     }
     
-### Add Slug Parameter to Routes ###
+### Add Slug Parameter to Routes
     
 Declare a route that contains an ``entitySlug`` parameter and points to your action: 
     
@@ -81,7 +77,7 @@ That's it! Whenever a sluggable entity is used together with a slug parameter in
 step in and perform a validation. If a slug is invalid, then a redirect to the same route with the 
 corrected slug will be initiated.
 
-### Additional Information ###
+### Additional Information
 
 Entity and slug parameters are matched by convention: The slug parameter must use the suffix ``Slug``.
 For example the correct parameter name for a ``blogPost`` parameter is ``blogPostSlug``.
@@ -89,12 +85,12 @@ For example the correct parameter name for a ``blogPost`` parameter is ``blogPos
 If a route contains a sluggable entity but no slug parameter, then nothing will happen, so the usual
 Symfony behavior is not changed.
 
-#### Slug Generation ####
+#### Slug Generation
 
 If you are not sure how to create your slugs, then you might find [cocur/slugify](https://github.com/cocur/slugify)
 useful. A component that generates URL slugs from any string.
 
-#### Simplified Routing ####
+#### Simplified Routing
 
 Passing slug values during route generation can be a tedious and error-prone task.
 [webfactory/object-routing](https://github.com/webfactory/object-routing) and [webfactory/object-routing-bundle](https://github.com/webfactory/BGObjectRoutingBundle)
@@ -108,12 +104,12 @@ can ease that task by defining route construction rules directly with your entit
      */
     class MyEntity implements SluggableInterface
     {
-        public function getId() 
+        public function getId(): int
         {
             // ...
         }
         
-        public function getSlug() 
+        public function getSlug(): ?string
         {
             // ...
         }
@@ -125,7 +121,7 @@ When generating the URL, you don't have to deal with passing these parameters an
 
     {{ object_path('my_object_route', myEntityInstance) }}
 
-## Credits, Copyright and License ##
+## Credits, Copyright and License
 
 This project was started at webfactory GmbH, Bonn.
 
