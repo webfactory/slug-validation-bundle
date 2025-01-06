@@ -104,12 +104,12 @@ can ease that task by defining route construction rules directly with your entit
      */
     class MyEntity implements SluggableInterface
     {
-        public function getId() 
+        public function getId(): int
         {
             // ...
         }
         
-        public function getSlug() 
+        public function getSlug(): ?string
         {
             // ...
         }
