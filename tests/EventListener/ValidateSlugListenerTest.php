@@ -108,11 +108,11 @@ final class ValidateSlugListenerTest extends TestCase
 
     /**
      * Ensures that the listener does not redirect if there is no slug defined
-     * for the object.
+     * for the object, despite it's class implementing the SluggableInterface.
      *
      * @test
      */
-    public function listenerDoesNotRedirectIfObjectHasNoSlug(): void
+    public function listenerDoesNotRedirectIfObjectHasNullSlug(): void
     {
         $sluggable = $this->createSluggable(null);
         $event = $this->createEvent([$sluggable], 'invalid-slug');
