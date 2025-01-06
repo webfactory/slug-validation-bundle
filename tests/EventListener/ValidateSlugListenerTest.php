@@ -46,6 +46,16 @@ final class ValidateSlugListenerTest extends TestCase
     /**
      * @test
      */
+    public function listenerDoesNotRedirectIfRequestContainsAnObjectThatDoesNotImplementSluggableInterface(): void
+    {
+        $event = $this->createEvent([new \stdClass()]);
+
+        $this->assertListenerDoesNotRedirectForEvent($event);
+    }
+
+    /**
+     * @test
+     */
     public function listenerDoesNotRedirectIfRequestContainsObjectButNoSlugParameterIsProvided(): void
     {
         $event = $this->createEvent([$this->createSluggable()]);
@@ -60,6 +70,20 @@ final class ValidateSlugListenerTest extends TestCase
     {
         $sluggable = $this->createSluggable();
         $event = $this->createEvent([$sluggable], $sluggable->getSlug());
+
+        $this->assertListenerDoesNotRedirectForEvent($event);
+    }
+
+    /**
+     * Ensures that the listener does not redirect if there is no slug defined
+     * for the object, despite it's class implementing the SluggableInterface.
+     *
+     * @test
+     */
+    public function listenerDoesNotRedirectIfObjectHasNullSlug(): void
+    {
+        $sluggable = $this->createSluggable(null);
+        $event = $this->createEvent([$sluggable], 'invalid-slug');
 
         $this->assertListenerDoesNotRedirectForEvent($event);
     }
@@ -94,20 +118,6 @@ final class ValidateSlugListenerTest extends TestCase
         $this->listener->pepareRedirectIfAnInvalidSlugIsGiven($event);
 
         self::assertTrue($event->isPropagationStopped());
-    }
-
-    /**
-     * Ensures that the listener does not redirect if there is no slug defined
-     * for the object.
-     *
-     * @test
-     */
-    public function listenerDoesNotRedirectIfObjectHasNoSlug(): void
-    {
-        $sluggable = $this->createSluggable(null);
-        $event = $this->createEvent([$sluggable], 'invalid-slug');
-
-        $this->assertListenerDoesNotRedirectForEvent($event);
     }
 
     /**
