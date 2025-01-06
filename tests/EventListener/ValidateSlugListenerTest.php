@@ -46,6 +46,16 @@ final class ValidateSlugListenerTest extends TestCase
     /**
      * @test
      */
+    public function listenerDoesNotRedirectIfRequestContainsAnObjectThatDoesNotImplementSluggableInterface(): void
+    {
+        $event = $this->createEvent([new \stdClass()]);
+
+        $this->assertListenerDoesNotRedirectForEvent($event);
+    }
+
+    /**
+     * @test
+     */
     public function listenerDoesNotRedirectIfRequestContainsObjectButNoSlugParameterIsProvided(): void
     {
         $event = $this->createEvent([$this->createSluggable()]);
