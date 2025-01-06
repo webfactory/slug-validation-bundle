@@ -39,21 +39,17 @@ Enable the bundle:
 
 ## Usage ##
 
-*Prerequisite*: In order to be able to use the slug validation provided by this bundle,
-you have to load your sluggable objects outside of the controller action, e.g. via a
-[param converter](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html),
-so that the object is provided as a parameter to the action method.  
-For Doctrine entities Symfony brings this capability out of the box.
+### Prerequisite: Sluggable object as controller action parameter ###
 
-### Request Your Entity via Param Converter ###
-
-Declare your object as controller action parameter:
+Declare your sluggable object as controller action parameter:
 
     public function myAction(MyEntity $entity)
     {
     }
-    
-When using Doctrine entities, your route parameter ``entity`` must contain the entity ID to make this work.
+
+And configure it to be resolved before the controller action is called, e.g. via
+[`#[MapEntity]`](https://symfony.com/doc/current/doctrine.html#mapentity-options) or
+[`@ParamConverter`](http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html) (deprecated).
 
 ### Implement Sluggable ###
 
