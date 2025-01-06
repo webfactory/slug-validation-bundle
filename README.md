@@ -1,7 +1,7 @@
 # Slug Validation Bundle #
 
-[![Build Status](https://travis-ci.org/webfactory/slug-validation-bundle.svg?branch=master)](https://travis-ci.org/webfactory/slug-validation-bundle)
-[![Coverage Status](https://coveralls.io/repos/github/webfactory/slug-validation-bundle/badge.svg?branch=master)](https://coveralls.io/github/webfactory/slug-validation-bundle?branch=master)
+![Tests](https://github.com/webfactory/slug-validation-bundle/workflows/Tests/badge.svg)
+![Dependencies](https://github.com/webfactory/slug-validation-bundle/workflows/Dependencies/badge.svg)
 
 Do not clutter your controller actions with URL slug validation: This Symfony bundle helps
 to validate object slugs in URLs transparently.
