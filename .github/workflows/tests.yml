@@ -6,11 +6,6 @@ on:
             - master
     pull_request:
 
-env:
-    APP_ENV: test
-    TEMP: ${{ github.workspace }}/tmp
-    SYMFONY_DEPRECATIONS_HELPER: weak
-
 jobs:
     PHPUnit:
         runs-on: ubuntu-22.04
@@ -18,26 +13,25 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    - { php-version: 8.1, symfony-locked-version: none, dependency-version: prefer-stable }
-                    - { php-version: 8.2, symfony-locked-version: none, dependency-version: prefer-stable }
-                    - { php-version: 8.3, symfony-locked-version: none, dependency-version: prefer-stable }
-        name: PHPUnit (PHP ${{matrix.php-version}}, Symfony Version Lock ${{ matrix.symfony-locked-version }}, ${{ matrix.dependency-version }})
+                    - { php-version: 8.1, symfony-version: '', dependency-version: prefer-lowest }
+                    - { php-version: 8.3, symfony-version: 6.4.*, dependency-version: prefer-stable }
+                    - { php-version: 8.4, symfony-version: 7.*, dependency-version: prefer-stable }
+        name: PHPUnit (PHP ${{matrix.php-version}}, Symfony version lock ${{ matrix.symfony-version || 'none' }}, ${{ matrix.dependency-version }})
         steps:
+            -   uses: actions/checkout@v4
             -   uses: shivammathur/setup-php@v2
                 with:
                   php-version: ${{ matrix.php-version }}
                   coverage: none
-                  tools: composer:v2
-            -   uses: actions/checkout@v4
-            -   run: VERSION=${{ matrix.symfony-locked-version }} .github/workflows/lock-symfony-version.sh
-                if: matrix.symfony-locked-version != 'none'
+                  tools: composer:v2, flex
             -   uses: actions/cache@v4
                 with:
                     path: vendor
-                    key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ matrix.symfony-locked-version }}-${{ matrix.dependency-version }}-${{ hashFiles('composer.json') }}
+                    key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ matrix.symfony-version }}-${{ matrix.dependency-version }}-${{ hashFiles('composer.json') }}
                     restore-keys: |
-                        composer-${{ runner.os }}-${{ matrix.php-version }}-${{ matrix.symfony-locked-version }}-${{ matrix.dependency-version }}-
-            -   run: |
-                    composer install --no-interaction --no-progress --ansi --no-scripts
-                    composer show
-            -   run: vendor/bin/phpunit
+                        composer-${{ runner.os }}-${{ matrix.php-version }}-${{ matrix.symfony-version }}-${{ matrix.dependency-version }}-
+            -   run: composer update --${{ matrix.dependency-version }} --no-interaction --no-scripts --no-progress --ansi
+                env:
+                    SYMFONY_REQUIRE: ${{ matrix.symfony-version }}
+            -   run: composer show
+            -   run: vendor/bin/phpunit --display-warnings --display-deprecations

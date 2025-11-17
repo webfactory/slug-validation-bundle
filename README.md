@@ -126,6 +126,5 @@ When generating the URL, you don't have to deal with passing these parameters an
 This project was started at webfactory GmbH, Bonn.
 
 - <https://www.webfactory.de>
-- <https://twitter.com/webfactory>
 
 Copyright 2016-2025 webfactory GmbH, Bonn. Code released under [the MIT license](LICENSE).
