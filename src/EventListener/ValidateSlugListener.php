@@ -31,7 +31,7 @@ final class ValidateSlugListener implements EventSubscriberInterface
     }
 
     public function __construct(
-        private UrlGeneratorInterface $urlGenerator
+        private UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -49,7 +49,7 @@ final class ValidateSlugListener implements EventSubscriberInterface
     private function prepareRedirect(
         ControllerArgumentsEvent $event,
         string $parameterName,
-        SluggableInterface $sluggable
+        SluggableInterface $sluggable,
     ): void {
         $event->setController(function () use ($event, $parameterName, $sluggable) {
             return new RedirectResponse(

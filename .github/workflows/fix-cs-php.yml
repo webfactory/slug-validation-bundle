@@ -1,5 +1,5 @@
 # Update this by running
-# curl https://gist.github.com/mpdude/ca93a185bcbf56eb7e341632ad4f8263/raw/fix-cs-php.yml > .github/workflows/fix-cs-php.yml
+# curl https://gist.githubusercontent.com/mpdude/ca93a185bcbf56eb7e341632ad4f8263/raw/fix-cs-php.yml > .github/workflows/fix-cs-php.yml
 
 on:
     push:
@@ -21,7 +21,7 @@ jobs:
                     ref: ${{ github.head_ref }}
 
             -   name: Run PHP-CS-Fixer
-                uses: docker://ghcr.io/php-cs-fixer/php-cs-fixer:3.62.0-php8.3
+                uses: docker://ghcr.io/php-cs-fixer/php-cs-fixer:3.89.2-php8.4
                 with:
                     args: "fix --show-progress=dots"
 
