@@ -52,11 +52,13 @@ final class ValidateSlugListener implements EventSubscriberInterface
         SluggableInterface $sluggable,
     ): void {
         $event->setController(function () use ($event, $parameterName, $sluggable) {
+            $requestAttributes = $event->getRequest()->attributes;
+
             return new RedirectResponse(
                 $this->urlGenerator->generate(
-                    $event->getRequest()->get('_route'),
+                    $requestAttributes->get('_route'),
                     array_merge(
-                        $event->getRequest()->attributes->get('_route_params', []),
+                        $requestAttributes->get('_route_params', []),
                         [$this->getSlugParameterNameFor($parameterName) => $sluggable->getSlug()]
                     )
                 ),
