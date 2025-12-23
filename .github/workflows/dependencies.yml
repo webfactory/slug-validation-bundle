@@ -15,16 +15,14 @@ env:
 jobs:
     composer-require-checker:
         name: Check missing composer requirements
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-latest
         if: github.actor != 'dependabot[bot]'
         steps:
             -   uses: shivammathur/setup-php@v2
                 with:
                   php-version: ${{ env.PHP_VERSION }}
                   coverage: none
-                  tools: composer:v2
-                  ini-values: variables_order=EGPCS, date.timezone=Europe/Berlin
-                  extensions: intl
+                  tools: composer:v2, flex
             -   uses: actions/checkout@v4
             -   uses: actions/cache@v4
                 with:
@@ -36,4 +34,5 @@ jobs:
             -   run: |
                     composer install --no-interaction --no-progress --ansi --no-scripts
                     composer show
-            -   uses: docker://webfactory/composer-require-checker:4.5.0
+            -   name: ComposerRequireChecker
+                uses: docker://ghcr.io/webfactory/composer-require-checker:4.19.0
