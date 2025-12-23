@@ -2,6 +2,7 @@
 
 namespace Webfactory\SlugValidationBundle\Tests\EventListener;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,17 +26,13 @@ final class ValidateSlugListenerTest extends TestCase
         $this->listener = new ValidateSlugListener($this->createUrlGenerator());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isEventSubscriber(): void
     {
         $this->assertInstanceOf(EventSubscriberInterface::class, $this->listener);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function listenerDoesNotRedirectIfRequestContainsNoObjects(): void
     {
         $event = $this->createEvent();
@@ -43,9 +40,7 @@ final class ValidateSlugListenerTest extends TestCase
         $this->assertListenerDoesNotRedirectForEvent($event);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function listenerDoesNotRedirectIfRequestContainsAnObjectThatDoesNotImplementSluggableInterface(): void
     {
         $event = $this->createEvent([new \stdClass()]);
@@ -53,9 +48,7 @@ final class ValidateSlugListenerTest extends TestCase
         $this->assertListenerDoesNotRedirectForEvent($event);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function listenerDoesNotRedirectIfRequestContainsObjectButNoSlugParameterIsProvided(): void
     {
         $event = $this->createEvent([$this->createSluggable()]);
@@ -63,9 +56,7 @@ final class ValidateSlugListenerTest extends TestCase
         $this->assertListenerDoesNotRedirectForEvent($event);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function listenerDoesNotRedirectIfRequestContainsValidSlugForObject(): void
     {
         $sluggable = $this->createSluggable();
@@ -77,9 +68,8 @@ final class ValidateSlugListenerTest extends TestCase
     /**
      * Ensures that the listener does not redirect if there is no slug defined
      * for the object, despite it's class implementing the SluggableInterface.
-     *
-     * @test
      */
+    #[Test]
     public function listenerDoesNotRedirectIfObjectHasNullSlug(): void
     {
         $sluggable = $this->createSluggable(null);
@@ -88,9 +78,7 @@ final class ValidateSlugListenerTest extends TestCase
         $this->assertListenerDoesNotRedirectForEvent($event);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function listenerRedirectsToUrlWithCorrectSlugIfRequestContainsInvalidSlug(): void
     {
         $event = $this->createEventForRedirect();
@@ -108,9 +96,8 @@ final class ValidateSlugListenerTest extends TestCase
     /**
      * There are problems with the template listener in newer Symfony versions if
      * the event propagation is not stopped.
-     *
-     * @test
      */
+    #[Test]
     public function listenerStopsEventPropagationIfRedirectIsNecessary(): void
     {
         $event = $this->createEventForRedirect();
