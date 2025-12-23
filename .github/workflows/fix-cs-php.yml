@@ -1,5 +1,7 @@
 # Update this by running
-# curl https://gist.githubusercontent.com/mpdude/ca93a185bcbf56eb7e341632ad4f8263/raw/fix-cs-php.yml > .github/workflows/fix-cs-php.yml
+# curl https://gist.githubusercontent.com/mpdude/804005e2bc7717bc36e4def876a5303d/raw/fix-php-cs.yml > .github/workflows/fix-cs-php.yml
+
+name: Coding Standards
 
 on:
     push:
@@ -7,12 +9,10 @@ on:
             - master
     pull_request:
 
-name: Coding Standards
-
 jobs:
-    fix-cs-issues:
-        name: PHP-CS-Fixer
-        runs-on: ubuntu-22.04
+    fix-cs-violations:
+        name: Apply PHP-CS-Fixer
+        runs-on: ubuntu-latest
         if: github.actor != 'dependabot[bot]'
         steps:
             -   name: Checkout code
